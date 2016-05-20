@@ -1,7 +1,9 @@
-/*{
+/*
+{
   "name": "Luis",
   "email": "jacaam1516daw2@gmail.com"
-}*/
+}
+*/
 var express = require("express");
 var mongoskin = require("mongoskin");
 var bodyParser = require("body-parser");
@@ -35,6 +37,9 @@ app.param('coleccion', function (req, res, next, coleccion) {
     return next();
 });
 
+/*
+ * Recuperar toda la colección
+ */
 app.get('/api/:coleccion', function (req, res, next) {
     req.collection.find({}, {
         limit: 10,
@@ -45,14 +50,20 @@ app.get('/api/:coleccion', function (req, res, next) {
     });
 });
 
-app.post('/api/:colecion', function (req, res, next) {
+/*
+ * Añadir Colección
+ */
+app.post('/api/:coleccion', function (req, res, next) {
     req.collection.insert(req.body, {}, function (e, results) {
         if (e) return next(e);
         res.send(results);
     });
 });
 
-app.get('/api/:colecion/:id', function (req, res, next) {
+/*
+ * Buscar por ID
+ */
+app.get('/api/:coleccion/:id', function (req, res, next) {
     req.collection.findOne({
         _id: id(req.params.id)
     }, function (e, result) {
@@ -61,6 +72,9 @@ app.get('/api/:colecion/:id', function (req, res, next) {
     });
 });
 
+/*
+ * Modificar
+ */
 app.put('/api/:coleccion/:id', function (req, res, next) {
     req.collection.update({
             _id: id(req.params.id)
@@ -80,6 +94,26 @@ app.put('/api/:coleccion/:id', function (req, res, next) {
         });
 });
 
+/*
+ * Eliminar por email (email es único)
+ */
+app.delete('/api/:coleccion/:email', function (req, res, next) {
+    req.collection.remove({
+            email: id(req.params.email)
+        },
+        function (e, result) {
+            if (e) return next(e);
+            res.send((result === 1) ? {
+                msg: 'success'
+            } : {
+                msg: 'error'
+            });
+        });
+});
+
+/*
+ * Eliminar por ID
+ */
 app.delete('/api/:coleccion/:id', function (req, res, next) {
     req.collection.remove({
             _id: id(req.params.id)
@@ -93,6 +127,8 @@ app.delete('/api/:coleccion/:id', function (req, res, next) {
             });
         });
 });
+
+
 
 app.listen(8080, function () {
     console.log('Servidor escuchando en puerto 8080');
