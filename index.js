@@ -98,8 +98,9 @@ app.put('/api/:coleccion/:id', function (req, res, next) {
  * Eliminar por email (email es único)
  */
 app.delete('/api/:coleccion/:email', function (req, res, next) {
+    console.log(req.params.email);
     req.collection.remove({
-            email: id(req.params.email)
+            email: req.params.email
         },
         function (e, result) {
             if (e) return next(e);
