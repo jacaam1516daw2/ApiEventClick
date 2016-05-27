@@ -42,7 +42,6 @@ app.param('coleccion', function (req, res, next, coleccion) {
  */
 app.get('/api/:coleccion', function (req, res, next) {
     req.collection.find({}, {
-        limit: 10,
         sort: [['_id', -1]]
     }).toArray(function (e, results) {
         if (e) return next(e);
@@ -98,7 +97,6 @@ app.put('/api/:coleccion/:id', function (req, res, next) {
  * Eliminar por email (email es único)
  */
 app.delete('/api/:coleccion/:email', function (req, res, next) {
-    console.log(req.params.email);
     req.collection.remove({
             email: req.params.email
         },
